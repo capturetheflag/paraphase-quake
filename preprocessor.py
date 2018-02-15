@@ -1,14 +1,24 @@
 # -*- coding: utf-8 -*-
 
 from gensim.utils import simple_preprocess
+from gensim.models.fasttext import FastText
+import numpy as np
 
 class Preprocessor:
-    def __init__(self, text_corpus):
-        self.corpus = text_corpus
+    def __init__(self, paraphrases):
+        self.embeddings = FastText.load(
+            '../../Downloads/araneum_none_fasttextskipgram_300_5_2018/araneum_none_fasttextskipgram_300_5_2018.model', 
+            mmap = 'r')
+        self.paraphrases = paraphrases
         
-    def get_embeddings(self):
-        return []
-    
+    def get_embeddings(self, sentence):
+        words = self.tokenize(sentence)
+        embeddings = list()
+        for word in words:
+            embeddings.append(self.embeddings[word])
+        sentence_average = np.ndarray(embeddings).mean()
+        return sentence_average
+        
     def tokenize(self, sentence):
         tokenize = lambda x: simple_preprocess(x)
         return tokenize(sentence)
