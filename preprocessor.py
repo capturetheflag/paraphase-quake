@@ -16,8 +16,7 @@ class Preprocessor:
         embeddings = list()
         for word in words:
             embeddings.append(self.embeddings[word])
-        sentence_average = np.ndarray(embeddings).mean()
-        return sentence_average
+        return np.sum(embeddings, axis=0)
         
     def tokenize(self, sentence):
         tokenize = lambda x: simple_preprocess(x)
