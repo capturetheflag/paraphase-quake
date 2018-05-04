@@ -22,4 +22,7 @@ class Preprocessor:
         tokenize = lambda x: simple_preprocess(x)
         return tokenize(sentence)
         
-        
+
+# Pymorphic tool for lemmas and pos-taging 
+# IAM's tool (Lyubov Yurievna will share)
+# Can use Keras, PyTorch  - all suitable
