@@ -12,7 +12,7 @@ import numpy as np
 
 class Model:
     EMBEDDING_SIZE = 300
-    MAX_LENGTH = 10
+    MAX_LENGTH = 50
 
     def __init__(self):
         self.model = Sequential()

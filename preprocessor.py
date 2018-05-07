@@ -11,13 +11,20 @@ class Preprocessor:
             mmap = 'r')
         self.paraphrases = paraphrases
         
-    def get_embeddings(self, sentence):
+    def get_sentence_embedding(self, sentence):
         words = self.tokenize(sentence)
         embeddings = list()
         for word in words:
             embeddings.append(self.embeddings[word])
         return np.sum(embeddings, axis=0)
-        
+
+    def get_words_embeddings(self, sentence):
+        words = self.tokenize(sentence)
+        embeddings = list()
+        for word in words:
+            embeddings.append(self.embeddings[word])
+        return embeddings
+
     def tokenize(self, sentence):
         tokenize = lambda x: simple_preprocess(x)
         return tokenize(sentence)

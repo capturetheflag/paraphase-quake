@@ -35,4 +35,4 @@ class Paraphrase:
         self.id_2 = int(id_2)
         self.string_1 = string_1
         self.string_2 = string_2
-        self.value = int(value)
+        self.value = 0 if int(value) < 1 else 1
