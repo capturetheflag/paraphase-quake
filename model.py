@@ -14,7 +14,7 @@ import numpy as np
 
 class Model:
     EMBEDDING_SIZE = 300
-    MAX_LENGTH = 50
+    MAX_LENGTH = 20
 
     def __init__(self):
         self.model = Sequential()
@@ -31,7 +31,11 @@ class Model:
         self.model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
 
     def fit(self, x_train, y_train, batch_size, epochs=3):
-        x_train = sequence.pad_sequences(x_train, maxlen=self.MAX_LENGTH)
+        for i in len(x_train):
+            for j in len(x_train[i]):
+                x_train[i][j] = sequence.pad_sequences(x_train, maxlen=self.MAX_LENGTH)
+
+        # x_train = sequence.pad_sequences(x_train, maxlen=self.MAX_LENGTH)
         tensorBoardCallback = TensorBoard(log_dir='./logs', write_graph=True)
         
         self.model.fit(x_train, y_train, batch_size=batch_size, epochs=epochs, shuffle=True, callbacks=[tensorBoardCallback])
