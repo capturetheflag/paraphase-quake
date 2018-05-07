@@ -86,8 +86,8 @@ for i in range (21, 30):
     res = next(result)
 
     x_item = 2*[0]
-    x_item[0] = sequence.pad_sequences(news_corp_preprocessor.get_words_embeddings(res.string_1), maxlen=MAX_LENGTH)
-    x_item[1] = sequence.pad_sequences(news_corp_preprocessor.get_words_embeddings(res.string_2), maxlen=MAX_LENGTH)
+    x_item[0] = np.array(news_corp_preprocessor.get_words_embeddings(res.string_1))
+    x_item[1] = np.array(news_corp_preprocessor.get_words_embeddings(res.string_2))
 
     y_item = 1*[0]
     y_item[0] = res.value

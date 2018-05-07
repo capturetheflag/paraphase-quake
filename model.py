@@ -18,7 +18,7 @@ class Model:
 
     def __init__(self):
         self.model = Sequential()
-        self.model.add(Embedding(2, self.EMBEDDING_SIZE, input_length=self.MAX_LENGTH))
+        self.model.add(Embedding(5, self.EMBEDDING_SIZE, input_length=2))
         self.model.add(Conv1D(64, 3, padding='same'))
         self.model.add(Conv1D(32, 3, padding='same'))
         self.model.add(Conv1D(16, 3, padding='same'))
@@ -31,7 +31,7 @@ class Model:
         self.model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
 
     def fit(self, x_train, y_train, batch_size, epochs=3):
-        x_train = sequence.pad_sequences(x_train, maxlen=self.MAX_LENGTH)
+        #x_train = sequence.pad_sequences(x_train, maxlen=self.MAX_LENGTH)
         tensorBoardCallback = TensorBoard(log_dir='./logs', write_graph=True)
         
         self.model.fit(x_train, y_train, batch_size=batch_size, epochs=epochs, shuffle=True, callbacks=[tensorBoardCallback])
