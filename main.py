@@ -6,6 +6,7 @@ from preprocessor import Preprocessor
 from model import Model
 import numpy as np
 from sklearn.linear_model import LogisticRegression
+from keras.preprocessing import sequence
 
 xml_loader = XmlLoader()
 xml_loader.load('../../Downloads/paraphraser/paraphrases.xml')
@@ -63,7 +64,9 @@ y_train = list()
 x_test = list()
 y_test = list()
 
-for i in range (0, 500):
+MAX_LENGTH = 7
+
+for i in range (0, 10):
     res = next(result)
 
     if (res.value < 0):
@@ -79,12 +82,12 @@ for i in range (0, 500):
     x_train.append(x_item)
     y_train.append(y_item)
 
-for i in range (501, 1000):
+for i in range (21, 30):
     res = next(result)
 
     x_item = 2*[0]
-    x_item[0] = news_corp_preprocessor.get_words_embeddings(res.string_1)
-    x_item[1] = news_corp_preprocessor.get_words_embeddings(res.string_2)
+    x_item[0] = sequence.pad_sequences(news_corp_preprocessor.get_words_embeddings(res.string_1), maxlen=MAX_LENGTH)
+    x_item[1] = sequence.pad_sequences(news_corp_preprocessor.get_words_embeddings(res.string_2), maxlen=MAX_LENGTH)
 
     y_item = 1*[0]
     y_item[0] = res.value
