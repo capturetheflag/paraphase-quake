@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from scipy.spatial import distance
 
 class FeatureExtractor:

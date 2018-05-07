@@ -19,17 +19,17 @@ y_train = list()
 x_test = list()
 y_test = list()
 
-# Logistic Regression technique
+### Logistic Regression technique
 
 for i in range (0, 3000):
     res = next(result)
+
+    if (res.value < 0):
+        print('target class expected to be 0 or 1, but got: ' + str(res.value))
+
     x_item = 1*[0]
     y_item = 1*[0]
     x_item[0] = feature_extractor.get_distance(res.string_1, res.string_2)
-    
-    if (res.value < 0):
-        print('target class expected to be 0 or 1, but got: ' + res.value)
-    
     y_item[0] = res.value
     x_train.append(x_item)
     y_train.append(y_item)
@@ -53,47 +53,7 @@ clf.fit(X=feature_train, y=target_train)
 print(clf.score(X=feature_test, y=target_test))
 clf.predict(feature_test)
 
-# Deep neural network technique
-
-# препроцессинг (убрать ненужные слова, лемматизировать)
-# tf-idf
-# описать корпус: количество слов в корпусе, размер
-# 
-# на выходе должно показываться n-лучших перифраз по заданной фразе
-# описать какие типы перифраз бывает
-# предобработанный текст - сохранять на диск
-# описать каждое изменение параметров (замена слоформ на лексемы в качестве признака)
-
-# 1. as for the baseline - use word2vec model and fastText model
-# 2. compare it, usi g logistic regresssion
-# 3. train own word embeddings on test data and see how it goes
-# 4. compare those and make a conclusion
-# 5. choose one among them and use in NN model (like CNN)
-# 6. Fix CNN model (16 hours)
-
-# LSTM for sequence classification in the IMDB dataset
-
-# fix random seed for reproducibility
-# np.random.seed(7)
-# # load the dataset but only keep the top n words, zero the rest
-# top_words = 5000
-# (X_train, y_train), (X_test, y_test) = imdb.load_data(nb_words=top_words)
-# # truncate and pad input sequences
-# max_review_length = 
-# X_train = sequence.pad_sequences(X_train, maxlen=max_review_length)
-# X_test = sequence.pad_sequences(X_test, maxlen=max_review_length)
-# # create the model
-# embedding_vector_length = 32
-# model = Sequential()
-# model.add(Embedding(top_words, embedding_vector_length, input_length=max_review_length))
-# model.add(LSTM(100))
-# model.add(Dense(1, activation='sigmoid'))
-# model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
-# print(model.summary())
-# model.fit(X_train, y_train, nb_epoch=3, batch_size=64)
-# # Final evaluation of the model
-# scores = model.evaluate(X_test, y_test, verbose=0)
-# print("Accuracy: %.2f%%" % (scores[1]*100))
+### Deep neural network technique
 
 #nn_model = Model()
 #nn_model.fit(feature_train, target_train, 1)
