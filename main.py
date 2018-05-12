@@ -92,6 +92,12 @@ for i in range (21, 30):
     x_test.append(x_item)
     y_test.append(y_item)
 
-nn_model = Model()
+embedding_matrix = np.zeros((100, 300))
+index = 0
+for word in x_train:
+    embedding_vector = word[0]
+    embedding_matrix[index] = embedding_vector[0]
+
+nn_model = Model(embedding_matrix)
 nn_model.fit(x_train, y_train, 1)
 nn_model.predict(x_test)

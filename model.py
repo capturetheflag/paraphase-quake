@@ -16,9 +16,9 @@ class Model:
     EMBEDDING_SIZE = 300
     MAX_LENGTH = 20
 
-    def __init__(self):
+    def __init__(self, embedding_matrix):
         self.model = Sequential()
-        self.model.add(Embedding(5, self.EMBEDDING_SIZE, input_length=2))
+        self.model.add(Embedding(100, 300, weights=[embedding_matrix], input_length=10, trainable=False))
         self.model.add(Conv1D(64, 3, padding='same'))
         self.model.add(Conv1D(32, 3, padding='same'))
         self.model.add(Conv1D(16, 3, padding='same'))
