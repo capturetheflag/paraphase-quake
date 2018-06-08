@@ -4,40 +4,67 @@ from keras.datasets import imdb
 from keras.models import Sequential
 from keras.layers import Dense
 from keras.layers import LSTM, Embedding, Dropout
-from keras.layers import Conv1D
-from keras.layers import MaxPooling1D
+from keras.layers import Conv1D, Conv2D
+from keras.layers import MaxPooling1D, MaxPooling2D
 from keras.layers import Flatten
 from keras.layers.embeddings import Embedding
 from keras.preprocessing import sequence
 from keras.callbacks import TensorBoard
 import numpy as np
 
+#top_words = 50
+#(X_train, y_train), (X_test, y_test) = imdb.load_data(nb_words=top_words)
+#truncate and pad input sequences
+#max_review_length = 10
+#X_train = sequence.pad_sequences(X_train, maxlen=max_review_length)
+# X_test = sequence.pad_sequences(X_test, maxlen=max_review_length)
+# # create the model
+# embedding_vector_length = 32
+# model = Sequential()
+# model.add(Embedding(top_words, embedding_vector_length, input_length=max_review_length))
+# model.add(LSTM(100))
+# model.add(Dense(1, activation='sigmoid'))
+# model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
+# print(model.summary())
+# model.fit(X_train, y_train, nb_epoch=3, batch_size=64)
+# # Final evaluation of the model
+# scores = model.evaluate(X_test, y_test, verbose=0)
+# print("Accuracy: %.2f%%" % (scores[1]*100))
+
+
 class Model:
     EMBEDDING_SIZE = 300
-    MAX_LENGTH = 20
-
-    def __init__(self, embedding_matrix):
+    
+    def __init__(self, dataset_length=1000, input_length=10):
         self.model = Sequential()
-        self.model.add(Embedding(100, 300, weights=[embedding_matrix], input_length=10, trainable=False))
-        self.model.add(Conv1D(64, 3, padding='same'))
-        self.model.add(Conv1D(32, 3, padding='same'))
-        self.model.add(Conv1D(16, 3, padding='same'))
+        #self.model.add(Embedding(nb_words_length, self.EMBEDDING_SIZE, weights=[embedding_matrix], input_length=300, trainable=False))
+        #self.model.add(Embedding(dataset_length, self.EMBEDDING_SIZE, input_length=input_length))
+        #self.model.add(Dense(units=1, kernel_initializer='normal', activation='sigmoid'))
+        self.model.add(Conv2D(10, 2, padding='same', input_shape=(10, 300, 1)))
+        #self.model.add(MaxPooling2D())
+        #self.model.add(Conv2D(32, 3, padding='same'))
+        #self.model.add(Conv2D(16, 3, padding='same'))
         self.model.add(Flatten())
-        self.model.add(Dropout(0.2))
-        self.model.add(Dense(180,activation='sigmoid'))
-        self.model.add(Dropout(0.2))
+        #self.model.add(Dropout(0.2))
+        #self.model.add(Dense(180,activation='sigmoid'))
+        #self.model.add(Dropout(0.2))
         self.model.add(Dense(1,activation='sigmoid'))
 
         self.model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
 
-    def fit(self, x_train, y_train, batch_size, epochs=3):
-        #x_train = sequence.pad_sequences(x_train, maxlen=self.MAX_LENGTH)
+    def fit(self, x_train, y_train, batch_size, epochs=3, verbose=1):
+        # for x in x_train:
+        #     x = sequence.pad_sequences(x, maxlen=self.MAX_LENGTH)
+
         tensorBoardCallback = TensorBoard(log_dir='./logs', write_graph=True)
         
-        self.model.fit(x_train, y_train, batch_size=batch_size, epochs=epochs, shuffle=True, callbacks=[tensorBoardCallback])
+        self.model.fit(x_train, y_train, batch_size=batch_size, epochs=epochs, shuffle=False, callbacks=[tensorBoardCallback])
 
-    def predict(self, x_test):
-        return self.model.predict(x_test)
+    def predict(self, x_test, y_test):
+        #return self.model.predict(x_test)
+        # # Final evaluation of the model
+        scores = self.model.evaluate(x_test, y_test, verbose=0)
+        print("Accuracy: %.2f%%" % (scores[1]*100))
 
 
 
@@ -52,11 +79,11 @@ class Model:
 # описать каждое изменение параметров (замена слоформ на лексемы в качестве признака)
 
 # 1. as for the baseline - use word2vec model and fastText model
-# 2. compare it, usi g logistic regresssion
+# 2. compare it, using logistic regresssion
 # 3. train own word embeddings on test data and see how it goes
 # 4. compare those and make a conclusion
 # 5. choose one among them and use in NN model (like CNN)
-# 6. Fix CNN model (16 hours)
+# 6. Fix CNN model (16 hours -hahaha - that was over optimistic even for me)
 
 # LSTM for sequence classification in the IMDB dataset
 
@@ -81,3 +108,9 @@ class Model:
 # # Final evaluation of the model
 # scores = model.evaluate(X_test, y_test, verbose=0)
 # print("Accuracy: %.2f%%" % (scores[1]*100))
+
+
+# calculate how much are paraphrases and how much are not. - to evaluate the result
+# switch from CNN to feed forward maybe ???? 
+# provide description
+# remove duplicate words from the dictionary
