@@ -15,7 +15,8 @@ class Preprocessor:
         words = self.tokenize(sentence)
         embeddings = list()
         for word in words:
-            embeddings.append(self.embeddings[word])
+            if (word in self.embeddings):
+                embeddings.append(self.embeddings[word])
         return np.sum(embeddings, axis=0)
 
     def get_words_embeddings(self, sentence):

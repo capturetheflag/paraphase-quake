@@ -73,7 +73,7 @@ if (1 < 0):
         x_train.append(x_item)
         y_train.append(y_item)
 
-    for i in range (4000, 5000):
+    for i in range (dataset_length, 2 * dataset_length):
         res = next(result)
         x_item = 1*[0]
         y_item = 1*[0]
@@ -90,8 +90,9 @@ if (1 < 0):
 
     clf = LogisticRegression(fit_intercept=True, n_jobs=1)
     clf.fit(X=feature_train, y=target_train)
-    print(clf.score(X=feature_test, y=target_test))
-    clf.predict(feature_test)
+    score = clf.score(X=feature_test, y=target_test)
+    print("Accuracy: %.2f%%" % (score * 100))
+    # clf.predict(feature_test)
 
 ### Deep neural network technique
 
@@ -126,5 +127,5 @@ nn_model = Model(sequence_length=LENGTH, vector_length=EMDEDDING_SIZE)
 #     nn_model.fit(train_sample, train_result, batch_size=1, epochs=3)
 #     index += 1
 
-nn_model.fit(np.array(x_train), np.array(y_train), batch_size=10, epochs=10)
+nn_model.fit(np.array(x_train), np.array(y_train), batch_size=10, epochs=20)
 nn_model.predict(np.array(x_test), y_test=np.array(y_test))
