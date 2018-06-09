@@ -96,9 +96,6 @@ zzz.trash/
 logs/
 sample/embeddings-*
 
-# text input corpus files
-/corpus
-
 # Visual Studio Code settings
 /.vscode
 
