@@ -33,19 +33,17 @@ import numpy as np
 
 
 class Model:
-    EMBEDDING_SIZE = 300
-    
-    def __init__(self, dataset_length=1000, input_length=10):
+    def __init__(self, sequence_length=15, vector_length=300):
         self.model = Sequential()
         #self.model.add(Embedding(nb_words_length, self.EMBEDDING_SIZE, weights=[embedding_matrix], input_length=300, trainable=False))
         #self.model.add(Embedding(dataset_length, self.EMBEDDING_SIZE, input_length=input_length))
         #self.model.add(Dense(units=1, kernel_initializer='normal', activation='sigmoid'))
-        self.model.add(Conv2D(10, 2, padding='same', input_shape=(10, 300, 1)))
+        self.model.add(Conv2D(10, 2, padding='same', input_shape=(sequence_length, vector_length, 1)))
         #self.model.add(MaxPooling2D())
         #self.model.add(Conv2D(32, 3, padding='same'))
         #self.model.add(Conv2D(16, 3, padding='same'))
         self.model.add(Flatten())
-        #self.model.add(Dropout(0.2))
+        self.model.add(Dropout(0.2))
         #self.model.add(Dense(180,activation='sigmoid'))
         #self.model.add(Dropout(0.2))
         self.model.add(Dense(1,activation='sigmoid'))
