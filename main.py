@@ -36,6 +36,18 @@ xml_loader = XmlLoader()
 xml_loader.load('../../Downloads/paraphraser/paraphrases.xml')
 result = xml_loader.parse()
 
+#### Count number of paraphrases and non-paraphrases in the dataset
+# para_count = 0
+# non_para_count = 0
+# for i in range (0, 2 * dataset_length):
+#     paraphrase = next(result)
+#     if (paraphrase.value > 0):
+#         para_count += 1
+#     else:
+#         non_para_count += 1
+
+# print((para_count, non_para_count))
+
 news_corp_preprocessor = Preprocessor(result)
 feature_extractor = FeatureExtractor(news_corp_preprocessor)
 
@@ -47,7 +59,7 @@ x_test = list()
 y_test = list()
 
 if (1 < 0):
-    for i in range (0, 3000):
+    for i in range (0, dataset_length):
         res = next(result)
 
         if (res.value < 0):
