@@ -35,13 +35,13 @@ import numpy as np
 class Model:
     def __init__(self, sequence_length=18, vector_length=300):
         self.model = Sequential()
-        self.model.add(Conv2D(64, 3, padding='same', input_shape=(sequence_length, vector_length, 1)))
-        self.model.add(Dropout(0.25))
+        self.model.add(Conv2D(32, 3, padding='same', input_shape=(sequence_length, vector_length, 1)))
+        self.model.add(Dropout(0.33))
+        self.model.add(MaxPooling2D())
         self.model.add(Conv2D(16, 3, padding='same'))
-        self.model.add(MaxPooling2D(padding='same'))
         self.model.add(Conv2D(8, 3, padding='same'))
         self.model.add(Flatten())
-        self.model.add(Dropout(0.25))
+        self.model.add(Dropout(0.2))
         self.model.add(Dense(1, activation='sigmoid'))
 
         self.model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
