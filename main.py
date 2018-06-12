@@ -33,7 +33,7 @@ def get_feature (item):
     return (x_item, y_item)
 
 xml_loader = XmlLoader()
-xml_loader.load('../../Downloads/paraphraser/paraphrases.xml')
+xml_loader.load('./corpus/paraphrases.xml')
 result = xml_loader.parse()
 
 #### Count number of paraphrases and non-paraphrases in the dataset
@@ -65,10 +65,10 @@ for i in range (0, len(true_para)):
 
 np.random.shuffle(dataset)
 
-for i in range (0, int(len(dataset) / 2)):
+for i in range (0, int(len(dataset) * 0.8)):
     train_data.append(dataset[i])
 
-for i in range (int(len(dataset) / 2), len(dataset)):
+for i in range (int(len(dataset) * 0.8), len(dataset)):
     test_data.append(dataset[i])
 
 # Over sampling
@@ -153,8 +153,5 @@ for i in range (0, len(test_data)):
     y_test.append(y_item)
 
 nn_model = Model(sequence_length=LENGTH, vector_length=EMDEDDING_SIZE)
-nn_model.fit(np.array(x_train), np.array(y_train), batch_size=10, epochs=10)
+nn_model.fit(np.array(x_train), np.array(y_train), batch_size=10, epochs=16)
 nn_model.predict(np.array(x_test), y_test=np.array(y_test))
-
-# выкинуть предлоги ?? 
-# стемминг

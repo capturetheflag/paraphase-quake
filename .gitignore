@@ -99,3 +99,6 @@ sample/embeddings-*
 # Visual Studio Code settings
 /.vscode
 
+# model files
+model/
+
