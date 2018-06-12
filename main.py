@@ -57,25 +57,34 @@ print((para_count, non_para_count))
 
 # 1402, 4598
 
-true_para = true_para + true_para # over-sampling
-
 train_data = list()
 test_data = list()
-
-dataset_oversampling = list()
+dataset = list()
 
 for i in range (0, len(true_para)):
-    dataset_oversampling.append(false_para[i])
+    dataset.append(true_para[i])
+    dataset.append(false_para[i])
 
-dataset_oversampling = dataset_oversampling + true_para
+np.random.shuffle(dataset)
 
-np.random.shuffle(dataset_oversampling)
+for i in range (0, int(len(dataset) / 2)):
+    train_data.append(dataset[i])
 
-for i in range (0, int(len(dataset_oversampling) / 2)):
-    train_data.append(dataset_oversampling[i])
+for i in range (int(len(dataset) / 2), len(dataset)):
+    test_data.append(dataset[i])
 
-for i in range (int(len(dataset_oversampling) / 2), len(dataset_oversampling)):
-    test_data.append(dataset_oversampling[i])
+# Over sampling
+
+for j in range (0, len(true_para)):
+    found = False
+    sample = true_para[j]
+    for i in range (0, len(test_data)):
+        if (sample.id == test_data[i].id):
+            found = True
+            break
+    if (found == False):
+        train_data.append(sample)
+        train_data.append(false_para[i + 2000])
 
 np.random.shuffle(train_data)
 np.random.shuffle(test_data)
@@ -89,8 +98,6 @@ x_train = list()
 y_train = list()
 x_test = list()
 y_test = list()
-
-dataset_length = int(len(dataset_oversampling) / 2)
 
 if (1 > 0):
     for i in range (0, len(train_data)):
