@@ -33,35 +33,24 @@ import numpy as np
 
 
 class Model:
-    def __init__(self, sequence_length=15, vector_length=300):
+    def __init__(self, sequence_length=18, vector_length=300):
         self.model = Sequential()
-        #self.model.add(Embedding(nb_words_length, self.EMBEDDING_SIZE, weights=[embedding_matrix], input_length=300, trainable=False))
-        #self.model.add(Embedding(dataset_length, self.EMBEDDING_SIZE, input_length=input_length))
-        #self.model.add(Dense(units=1, kernel_initializer='normal', activation='sigmoid'))
-        self.model.add(Conv2D(32, 3, padding='same', input_shape=(sequence_length, vector_length, 1)))
+        self.model.add(Conv2D(64, 3, padding='same', input_shape=(sequence_length, vector_length, 1)))
         self.model.add(Dropout(0.25))
         self.model.add(Conv2D(16, 3, padding='same'))
-        self.model.add(MaxPooling2D())
+        self.model.add(MaxPooling2D(padding='same'))
         self.model.add(Conv2D(8, 3, padding='same'))
         self.model.add(Flatten())
-        self.model.add(Dropout(0.2))
-        #self.model.add(Dense(180,activation='sigmoid'))
-        #self.model.add(Dropout(0.2))
+        self.model.add(Dropout(0.25))
         self.model.add(Dense(1, activation='sigmoid'))
 
         self.model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
 
     def fit(self, x_train, y_train, batch_size, epochs=3, verbose=1):
-        # for x in x_train:
-        #     x = sequence.pad_sequences(x, maxlen=self.MAX_LENGTH)
-
-        tensorBoardCallback = TensorBoard(log_dir='./logs', write_graph=True)
-        
+        tensorBoardCallback = TensorBoard(log_dir='./logs', write_graph=True)      
         self.model.fit(x_train, y_train, batch_size=batch_size, epochs=epochs, shuffle=False, callbacks=[tensorBoardCallback])
 
     def predict(self, x_test, y_test):
-        #return self.model.predict(x_test)
-        # # Final evaluation of the model
         scores = self.model.evaluate(x_test, y_test, verbose=0)
         print("Layered DNN. Accuracy: %.2f%%" % (scores[1]*100))
 
@@ -108,8 +97,4 @@ class Model:
 # scores = model.evaluate(X_test, y_test, verbose=0)
 # print("Accuracy: %.2f%%" % (scores[1]*100))
 
-
-# calculate how much are paraphrases and how much are not. - to evaluate the result
-# switch from CNN to feed forward maybe ???? 
 # provide description
-# remove duplicate words from the dictionary

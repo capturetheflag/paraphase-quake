@@ -11,14 +11,13 @@ from keras.preprocessing import sequence
 
 LENGTH = 22
 EMDEDDING_SIZE = 300
+CORPUS_LENGTH = 6000
 
-corpus_length = 6000
-
-def get_feature (data_item):
+def get_feature (item):
     if (data_item.value < 0):
-        print('target class expected to be 0 or 1, but got: ' + str(data_item.value))
+        print('target class expected to be 0 or 1, but got: ' + str(item.value))
 
-    x_item = news_corp_preprocessor.get_words_embeddings(data_item.string_1) + news_corp_preprocessor.get_words_embeddings(data_item.string_2)
+    x_item = news_corp_preprocessor.get_words_embeddings(item.string_1) + news_corp_preprocessor.get_words_embeddings(item.string_2)
     x_item = np.array(x_item)[:LENGTH]
 
     a = np.zeros((LENGTH, EMDEDDING_SIZE))
@@ -28,7 +27,6 @@ def get_feature (data_item):
             a[i] = x_item[i]
 
     x_item = np.reshape(a, (LENGTH, EMDEDDING_SIZE, 1))
-
     y_item = 1*[0]
     y_item[0] = data_item.value
 
@@ -44,7 +42,7 @@ non_para_count = 0
 true_para = list()
 false_para = list()
 
-for i in range (0, corpus_length):
+for i in range (0, CORPUS_LENGTH):
     paraphrase = next(result)
     if (paraphrase.value > 0):
         true_para.append(paraphrase)
@@ -75,16 +73,16 @@ for i in range (int(len(dataset) / 2), len(dataset)):
 
 # Over sampling
 
-for j in range (0, len(true_para)):
+for i in range (0, len(true_para)):
     found = False
-    sample = true_para[j]
-    for i in range (0, len(test_data)):
-        if (sample.id == test_data[i].id):
+    sample = true_para[i]
+    for j in range (0, len(test_data)):
+        if (sample.id == test_data[j].id):
             found = True
             break
-    if (found == False):
+    if (not found):
         train_data.append(sample)
-        train_data.append(false_para[i + 2000])
+        train_data.append(false_para[i + len(true_para)])
 
 np.random.shuffle(train_data)
 np.random.shuffle(test_data)
