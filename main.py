@@ -26,7 +26,7 @@ def get_feature (item):
         if (i < len(x_item)):
             a[i] = x_item[i]
 
-    x_item = np.reshape(a, (LENGTH, EMDEDDING_SIZE, 1))
+    x_item = np.reshape(a, (LENGTH, EMDEDDING_SIZE))
     y_item = 1*[0]
     y_item[0] = data_item.value
 
@@ -153,5 +153,5 @@ for i in range (0, len(test_data)):
     y_test.append(y_item)
 
 nn_model = Model(sequence_length=LENGTH, vector_length=EMDEDDING_SIZE)
-nn_model.fit(np.array(x_train), np.array(y_train), batch_size=10, epochs=16)
+nn_model.fit(np.array(x_train), np.array(y_train), batch_size=10, epochs=10)
 nn_model.predict(np.array(x_test), y_test=np.array(y_test))

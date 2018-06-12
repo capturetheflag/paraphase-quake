@@ -102,3 +102,5 @@ sample/embeddings-*
 # model files
 model/
 
+# Apple Mac OS file
+.DS_Store
