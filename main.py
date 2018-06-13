@@ -9,7 +9,7 @@ import scipy as scipy
 from sklearn.linear_model import LogisticRegression
 from keras.preprocessing import sequence
 
-LENGTH = 22
+SEQUENCE_LENGTH = 10
 EMDEDDING_SIZE = 300
 CORPUS_LENGTH = 6000
 
@@ -17,16 +17,24 @@ def get_feature (item):
     if (data_item.value < 0):
         print('target class expected to be 0 or 1, but got: ' + str(item.value))
 
-    x_item = news_corp_preprocessor.get_words_embeddings(item.string_1) + news_corp_preprocessor.get_words_embeddings(item.string_2)
-    x_item = np.array(x_item)[:LENGTH]
+    words1 = news_corp_preprocessor.get_words_embeddings(item.string_1)
+    words2 = news_corp_preprocessor.get_words_embeddings(item.string_2)
+    x_item = np.empty([SEQUENCE_LENGTH, SEQUENCE_LENGTH])
 
-    a = np.zeros((LENGTH, EMDEDDING_SIZE))
+    a = np.zeros((SEQUENCE_LENGTH, EMDEDDING_SIZE))
+    b = np.zeros((SEQUENCE_LENGTH, EMDEDDING_SIZE))
 
-    for i in range (0, LENGTH):
-        if (i < len(x_item)):
-            a[i] = x_item[i]
+    for i in range (0, SEQUENCE_LENGTH):
+        if (i < len(words1)):
+            a[i] = words1[i]
+        if (i < len(words2)):
+            b[i] = words2[i]
 
-    x_item = np.reshape(a, (LENGTH, EMDEDDING_SIZE))
+    for i in range (0, SEQUENCE_LENGTH):
+        for j in range (0, SEQUENCE_LENGTH):
+            x_item[i][j] = feature_extractor.get_word_similarity(a[i], b[j])
+
+    x_item = np.reshape(x_item, (SEQUENCE_LENGTH, SEQUENCE_LENGTH))
     y_item = 1*[0]
     y_item[0] = data_item.value
 
@@ -107,7 +115,7 @@ if (1 > 0):
         x_item = 1*[0]
         y_item = 1*[0]
         x_item[0] = feature_extractor.get_distance(item.string_1, item.string_2)
-        y_item[0] = item.value
+        y_item = item.value
 
         x_train.append(x_item)
         y_train.append(y_item)
@@ -117,21 +125,16 @@ if (1 > 0):
         x_item = 1*[0]
         y_item = 1*[0]
         x_item[0] = feature_extractor.get_distance(item.string_1, item.string_2)
-        y_item[0] = item.value
+        y_item = item.value
 
         x_test.append(x_item)
         y_test.append(y_item)
 
-    feature_train = np.array(x_train)
-    target_train = np.array(y_train)
-    feature_test = np.array(x_test)
-    target_test = np.array(y_test)
-
     clf = LogisticRegression(fit_intercept=True, n_jobs=1)
-    clf.fit(X=feature_train, y=target_train)
-    score = clf.score(X=feature_test, y=target_test)
+    clf.fit(X=np.array(x_train), y=np.array(y_train))
+    score = clf.score(X=np.array(x_test), y=np.array(y_test))
     print("Cosine distance (baseline). Accuracy: %.2f%%" % (score * 100))
-    # clf.predict(feature_test)
+    # clf.predict(np.array(y_test))
 
 ### Deep neural network technique
 
@@ -152,6 +155,6 @@ for i in range (0, len(test_data)):
     x_test.append(x_item)
     y_test.append(y_item)
 
-nn_model = Model(sequence_length=LENGTH, vector_length=EMDEDDING_SIZE)
-nn_model.fit(np.array(x_train), np.array(y_train), batch_size=10, epochs=10)
+nn_model = Model(sequence_length=SEQUENCE_LENGTH, vector_length=SEQUENCE_LENGTH)
+nn_model.fit(np.array(x_train), np.array(y_train), batch_size=10, epochs=20)
 nn_model.predict(np.array(x_test), y_test=np.array(y_test))

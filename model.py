@@ -10,17 +10,18 @@ from keras.callbacks import TensorBoard
 import numpy as np
 
 class Model:
-    def __init__(self, sequence_length=18, vector_length=300):
+    def __init__(self, sequence_length=18, vector_length=100):
         self.model = Sequential()
-        self.model.add(Conv1D(64, 3, padding='same', activation='sigmoid', input_shape=(sequence_length, vector_length)))
+        self.model.add(Conv1D(32, 3, padding='same', input_shape=(sequence_length, vector_length)))
+        self.model.add(Dropout(0.2))
         self.model.add(MaxPooling1D(4))
-        self.model.add(LSTM(256))
-        self.model.add(Dropout(0.02))
+        self.model.add(LSTM(100))
+        self.model.add(Dropout(0.15))
         self.model.add(Dense(1, activation='sigmoid'))
 
         self.model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
 
-    def fit(self, x_train, y_train, batch_size, epochs=3, verbose=1):
+    def fit(self, x_train, y_train, batch_size, epochs=5, verbose=1):
         tensorBoardCallback = TensorBoard(log_dir='./logs', write_graph=True)      
         self.model.fit(x_train, y_train, batch_size=batch_size, epochs=epochs, shuffle=False, callbacks=[tensorBoardCallback])
 
@@ -31,13 +32,10 @@ class Model:
 
 
 ### TODO
-# препроцессинг (убрать ненужные слова, лемматизировать)
-# tf-idf
-# описать корпус: количество слов в корпусе, размер
-# 
+# tf-idf для русского языка
 # на выходе должно показываться n-лучших перифраз по заданной фразе
 # описать какие типы перифраз бывает
-# предобработанный текст - сохранять на диск
+# предобработанный текст - сохранять на диск ?
 # описать каждое изменение параметров (замена слоформ на лексемы в качестве признака)
 
 # 1. as for the baseline - use word2vec model and fastText model
